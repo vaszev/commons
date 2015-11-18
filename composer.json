@@ -1,0 +1,33 @@
+{
+  "name": "vaszev/commons-bundle",
+  "description": "Service of common functions that may useful in symfony2",
+  "type": "symfony-bundle",
+  "homepage": "https://github.com/vaszev/commons",
+  "authors": [
+    {
+      "name": "Roland Bodnar",
+      "email": "vaszev@gmail.com"
+    }
+  ],
+  "keywords": [
+    "common bundle"
+  ],
+  "license": [
+    "MIT"
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "symfony/symfony": ">=2.6"
+  },
+  "minimum-stability":"dev",
+  "autoload": {
+    "psr-0": {
+      "Vaszev\\CommonsBundle": ""
+    }
+  },
+  "target-dir": "Vaszev/CommonsBundle",
+  "config": {
+    "preferred-install": "dist"
+  }
+
+}

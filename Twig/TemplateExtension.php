@@ -71,12 +71,12 @@ class TemplateExtension extends Twig_Extension {
       // outer link, start with http
       return $path;
     }
-
+    $rootDir = $this->container->get('kernel')->getRootDir();
     $commons = $this->container->get('vaszev_commons.functions');
     $docPath = trim($this->container->getParameter('vaszev_commons.docs'), '/');
     $defaultImage = __DIR__ . '/' . $this->container->getParameter('vaszev_commons.default_image');
     $defaultImageNewName = 'default-transparent.png';
-    $defaultImageDestination = __DIR__ . '/../../../../web/' . $docPath . '/' . $defaultImageNewName;
+    $defaultImageDestination = $rootDir .'/../web/'. $docPath . '/' . $defaultImageNewName;
     $unfold = explode('/', $path);
     $fileStr = end($unfold);
     $oldUrl = $docPath . '/' . $fileStr;

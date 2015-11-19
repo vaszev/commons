@@ -1,5 +1,9 @@
 {% extends 'VaszevCommonsBundle::base.html.twig' %}
 {% block body %}
+  <img src="{{ asset('uploads/documents/test.jpg')|imgSize('small') }}" title="test">
+  <hr>
+  {{ 123456|price }}
+  <hr>
   {{ filename }}
   <hr>
   {{ friendly }}

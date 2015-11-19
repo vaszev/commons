@@ -2,6 +2,12 @@
 
 namespace Vaszev\CommonsBundle\Service;
 
+use Gregwar\Image\Image;
+use Gregwar\ImageBundle\DependencyInjection\GregwarImageExtension;
+use Gregwar\ImageBundle\GregwarImageBundle;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+
 class Functions {
 
   private $doctrine;
@@ -290,6 +296,48 @@ class Functions {
     }
 
     return $fileName;
+  }
+
+
+
+  public function getImageVariant($path = null, $size = null, $crop = false) {
+    if ($path) {
+      $gregwar = new Image();
+      $unfold = explode("/", $path);
+      $filename = array_pop($unfold);
+      $parentPath = implode("/", $unfold);
+      $relativePath = $this->container->getParameter('vaszev_commons.docs');
+      $variations = $this->container->getParameter('vaszev_commons.image_variations');
+      foreach ($variations as $variation => $arr) {
+        if ($variation == $size) {
+          if ($crop) {
+            // crop
+            $newPath = $parentPath . "/" . $variation . "-cropped";
+            @mkdir($newPath, "0755", true);
+            if (!file_exists($newPath . "/" . $filename)) {
+              $data = getimagesize($path);
+              if ($data[0] < $arr[0] && $data[1] < $arr[1]) {
+                $gregwar->open($path)->save($newPath . "/" . $filename);
+              } else {
+                $gregwar->open($path)->zoomCrop($arr[0], $arr[1], 'ffffff', 'center', 'center')->save($newPath . "/" . $filename);
+              }
+            }
+
+            return ($relativePath . $variation . "-cropped" . "/" . $filename);
+          } else {
+            // let aspect ratio the same
+            $newPath = $parentPath . "/" . $variation;
+            @mkdir($newPath, "0755", true);
+            if (!file_exists($newPath . "/" . $filename)) {
+              $gregwar->open($path)->scaleResize($arr[0], $arr[1], 'ffffff')->save($newPath . "/" . $filename);
+            }
+
+            return ($relativePath . $variation . "/" . $filename);
+          }
+        }
+      }
+    }
+    throw new FileNotFoundException('Image not found');
   }
 
 }

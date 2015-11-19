@@ -22,6 +22,13 @@ class VaszevCommonsExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+      /**
+       * default_image, docs, image_variations['small'->[150,350]]
+       */
+        foreach ($config as $key=>$val) {
+          $container->setParameter('vaszev_commons.'.$key, $val);
+        }
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }

@@ -1,11 +1,18 @@
 # Learn more about services, parameters and containers at
 # http://symfony.com/doc/current/book/service_container.html
 parameters:
-#    parameter_name: value
+    vaszev.function.class: Vaszev\CommonsBundle\Service\Functions
+    vaszev.twig_extension.class: Vaszev\CommonsBundle\Twig\TemplateExtension
 
 services:
     vaszev_commons.functions:
-        class: Vaszev\CommonsBundle\Service\Functions
+        class: "%vaszev.function.class%"
         arguments: ["@doctrine","@translator","@service_container"]
         public: true
 
+    vaszev_commons.twig_extension:
+        class: "%vaszev.twig_extension.class%"
+        arguments: ["@service_container"]
+        public: true
+        tags:
+            - { name: twig.extension }

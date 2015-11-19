@@ -10,14 +10,16 @@
     }
   ],
   "keywords": [
-    "common bundle"
+    "bundle common useful symfony filter"
   ],
   "license": [
     "MIT"
   ],
   "require": {
     "php": ">=5.4.0",
-    "symfony/symfony": ">=2.6"
+    "symfony/framework-bundle": ">=2.6",
+    "ext-gd": "*",
+    "gregwar/image": "2.*"
   },
   "minimum-stability":"dev",
   "autoload": {

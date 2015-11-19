@@ -7,23 +7,34 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
  * This is the class that validates and merges configuration from your app/config files
- *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
  */
-class Configuration implements ConfigurationInterface
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfigTreeBuilder()
-    {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('vaszev_commons');
+class Configuration implements ConfigurationInterface {
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+  private $defaultImage = null;
+  private $docs = null;
+  private $imageVariations = [];
 
-        return $treeBuilder;
-    }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigTreeBuilder() {
+    $treeBuilder = new TreeBuilder();
+    $rootNode = $treeBuilder->root('vaszev_commons');
+
+    $rootNode
+        ->children()
+          ->variableNode('default_image')->defaultValue($this->defaultImage)->end()
+          ->variableNode('docs')->defaultValue($this->docs)->end()
+          ->variableNode('image_variations')->defaultValue($this->imageVariations)->end()
+        ->end();
+
+    // Here you should define the parameters that are allowed to
+    // configure your bundle. See the documentation linked above for
+    // more information on that topic.
+
+    return $treeBuilder;
+  }
 }

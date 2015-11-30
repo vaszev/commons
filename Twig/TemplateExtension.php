@@ -23,7 +23,20 @@ class TemplateExtension extends Twig_Extension {
         new \Twig_SimpleFilter('price', array($this, 'priceFilter')),
         new \Twig_SimpleFilter('imgSize', array($this, 'imgSizeFilter')),
         new \Twig_SimpleFilter('friendly', array($this, 'friendlyFilter')),
+        new \Twig_SimpleFilter('entityCheck', array($this, 'entityCheck')),
     );
+  }
+
+
+
+  public function entityCheck($entity) {
+    try {
+      $entity->getId();
+
+      return $entity;
+    } catch (\Exception $e) {
+      return false;
+    }
   }
 
 
@@ -54,7 +67,7 @@ class TemplateExtension extends Twig_Extension {
 
 
 
-  public function priceFilter($number, $decimals = 0, $decPoint = '.', $thousandsSep = ',', $currency='$') {
+  public function priceFilter($number, $decimals = 0, $decPoint = '.', $thousandsSep = ',', $currency = '$') {
     $price = number_format($number, $decimals, $decPoint, $thousandsSep);
     $price = $currency . $price;
 
@@ -76,7 +89,7 @@ class TemplateExtension extends Twig_Extension {
     $docPath = trim($this->container->getParameter('vaszev_commons.docs'), '/');
     $defaultImage = __DIR__ . '/' . $this->container->getParameter('vaszev_commons.default_image');
     $defaultImageNewName = 'default-transparent.png';
-    $defaultImageDestination = $rootDir .'/../web/'. $docPath . '/' . $defaultImageNewName;
+    $defaultImageDestination = $rootDir . '/../web/' . $docPath . '/' . $defaultImageNewName;
     $unfold = explode('/', $path);
     $fileStr = end($unfold);
     $oldUrl = $docPath . '/' . $fileStr;

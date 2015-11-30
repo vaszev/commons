@@ -5,14 +5,14 @@ genSimplePassword, getImageVariant, incFileNameIfExists, loremIpsum, passwordEnc
 
 ##Collection of common twig extensions
 
-dayNameFilter, friendlyFilter, imgSizeFilter, minutesTimeFilter, priceFilter
+dayNameFilter, friendlyFilter, imgSizeFilter, minutesTimeFilter, priceFilter, entityCheck
 
 ###how to **install**:
 https://packagist.org/packages/vaszev/commons-bundle
 
 via **composer**:
 ```
-$ composer install "vaszev/commons-bundle":"1.0.2"
+$ composer install "vaszev/commons-bundle":"1.0.3"
 ```
 
 set parameters in the **config.yml**:

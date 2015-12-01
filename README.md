@@ -12,7 +12,7 @@ https://packagist.org/packages/vaszev/commons-bundle
 
 via **composer**:
 ```
-$ composer install "vaszev/commons-bundle":"1.0.4"
+$ composer install "vaszev/commons-bundle":"1.0.5"
 ```
 
 set parameters in the **config.yml**:

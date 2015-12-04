@@ -70,6 +70,9 @@ class TemplateExtension extends Twig_Extension {
       if (empty($entity)) {
         throw new \Exception("entity is empty");
       }
+      if (!is_object($entity)) {
+        throw new \Exception("entity is not an object");
+      }
       $entity->getId();
 
       return $entity;

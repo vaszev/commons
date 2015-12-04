@@ -340,4 +340,40 @@ class Functions {
     throw new FileNotFoundException('Image not found');
   }
 
+
+
+  /**
+   * converts address to geo-coords
+   * @param array $address [0:city, 1:street & number, 2:zip & country]
+   * @return array
+   */
+  public function addressToCoords($address = array()) {
+    $coords = [
+        'lat' => null,
+        'lng' => null,
+    ];
+    for ($i = 0; $i < count($address); $i++) {
+      if (empty($address[$i])) {
+        unset($address[$i]);
+      }
+    }
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, 'https://maps.googleapis.com/maps/api/geocode/json?address=' . rawurlencode(implode(',', $address)));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+    $results = curl_exec($curl);
+    curl_close($curl);
+    if ($results) {
+      $data = json_decode($results);
+      if ($data->status == "OK") {
+        $first = $data->results[0];
+        $coords['lat'] = $first->geometry->location->lat;
+        $coords['lng'] = $first->geometry->location->lng;
+      }
+    }
+
+    return $coords;
+  }
+
 }

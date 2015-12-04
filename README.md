@@ -1,7 +1,7 @@
 # Commons
 ##Collection of common functions
 
-genSimplePassword, getImageVariant, incFileNameIfExists, loremIpsum, passwordEncode, passwordVerify, refreshSecurityToken, removeAccents, repairFileName, replaceNonAlphanumericChars
+genSimplePassword, getImageVariant, incFileNameIfExists, loremIpsum, passwordEncode, passwordVerify, refreshSecurityToken, removeAccents, repairFileName, replaceNonAlphanumericChars, addressToCoords
 
 ##Collection of common twig extensions
 
@@ -12,7 +12,7 @@ https://packagist.org/packages/vaszev/commons-bundle
 
 via **composer**:
 ```
-$ composer install "vaszev/commons-bundle":"1.0.5"
+$ composer install "vaszev/commons-bundle":"1.0.6"
 ```
 
 set parameters in the **config.yml**:

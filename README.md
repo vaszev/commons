@@ -1,4 +1,8 @@
 # Commons
+
+##Collection of common commands
+document:clear
+
 ##Collection of common functions
 
 genSimplePassword, getImageVariant, incFileNameIfExists, loremIpsum, passwordEncode, passwordVerify, refreshSecurityToken, removeAccents, repairFileName, replaceNonAlphanumericChars, addressToCoords
@@ -12,7 +16,7 @@ https://packagist.org/packages/vaszev/commons-bundle
 
 via **composer**:
 ```
-$ composer install "vaszev/commons-bundle":"1.0.7"
+$ composer install "vaszev/commons-bundle":"1.0.8"
 ```
 
 set parameters in the **config.yml**:

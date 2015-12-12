@@ -1,7 +1,7 @@
 # Commons
 
 ##Collection of common commands
-document:clear
+document:clear, project:clear:cache, project:size
 
 ##Collection of common functions
 
@@ -16,7 +16,7 @@ https://packagist.org/packages/vaszev/commons-bundle
 
 via **composer**:
 ```
-$ composer install "vaszev/commons-bundle":"1.0.8"
+$ composer install "vaszev/commons-bundle":"1.0.9"
 ```
 
 set parameters in the **config.yml**:

@@ -25,6 +25,29 @@ class Functions {
 
 
   /**
+   * Checks if entity's callable while get value getId() method
+   * @param $entity
+   * @return bool
+   */
+  public function entityCheck($entity) {
+    try {
+      if (empty($entity)) {
+        throw new \Exception("entity is empty");
+      }
+      if (!is_object($entity)) {
+        throw new \Exception("entity is not an object");
+      }
+      $entity->getId();
+
+      return true;
+    } catch (\Exception $e) {
+      return false;
+    }
+  }
+
+
+
+  /**
    * encodes user's password and return that string
    * @param object $user
    * @param string $password

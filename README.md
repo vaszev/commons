@@ -5,7 +5,7 @@ document:clear, project:clear:cache, project:size
 
 ##Collection of common functions
 
-genSimplePassword, getImageVariant, incFileNameIfExists, loremIpsum, passwordEncode, passwordVerify, refreshSecurityToken, removeAccents, repairFileName, replaceNonAlphanumericChars, addressToCoords
+genSimplePassword, getImageVariant, incFileNameIfExists, loremIpsum, passwordEncode, passwordVerify, refreshSecurityToken, removeAccents, repairFileName, replaceNonAlphanumericChars, addressToCoords, entityCheck
 
 ##Collection of common twig extensions
 

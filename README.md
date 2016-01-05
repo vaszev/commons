@@ -1,7 +1,7 @@
 # Commons
 
 ##Collection of common commands
-document:clear
+document:clear, project:clear:cache, project:size
 
 ##Collection of common functions
 

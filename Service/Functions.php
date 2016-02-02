@@ -342,7 +342,7 @@ class Functions {
               if ($data[0] < $arr[0] && $data[1] < $arr[1]) {
                 $gregwar->open($path)->save($newPath . "/" . $filename);
               } else {
-                $gregwar->open($path)->zoomCrop($arr[0], $arr[1], 'ffffff', 'center', 'center')->save($newPath . "/" . $filename);
+                $gregwar->open($path)->zoomCrop($arr[0], $arr[1], 'transparent', 'center', 'center')->save($newPath . "/" . $filename);
               }
             }
 
@@ -352,7 +352,7 @@ class Functions {
             $newPath = $parentPath . "/" . $variation;
             @mkdir($newPath, "0755", true);
             if (!file_exists($newPath . "/" . $filename)) {
-              $gregwar->open($path)->scaleResize($arr[0], $arr[1], 'ffffff')->save($newPath . "/" . $filename);
+              $gregwar->open($path)->scaleResize($arr[0], $arr[1], 'transparent')->save($newPath . "/" . $filename);
             }
 
             return ($relativePath . $variation . "/" . $filename);

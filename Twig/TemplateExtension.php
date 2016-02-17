@@ -132,26 +132,30 @@ class TemplateExtension extends Twig_Extension {
     $defaultImage = __DIR__ . '/' . $this->container->getParameter('vaszev_commons.default_image');
     $defaultImageNewName = 'default-transparent.png';
     $defaultImageDestination = $rootDir . '/../web/' . $docPath . '/' . $defaultImageNewName;
-    $unfold = explode('/', $path);
-    $fileStr = end($unfold);
-    $oldUrl = $docPath . '/' . $fileStr;
-    $newUrl = str_replace($docPath, ($docPath . '/' . $size), $fileStr);
-    // pre-check for image, get default is it fails
-    $imageSize = @getimagesize($oldUrl);
-    if (empty($imageSize)) {
-      $oldUrl = $docPath . '/' . $defaultImageNewName;
-      $newUrl = str_replace($docPath, ($docPath . '/' . $size), $defaultImageNewName);
-    }
     // copy default image if not exists
     if (!file_exists($defaultImageDestination)) {
       copy($defaultImage, $defaultImageDestination);
     }
+    $unfold = explode('/', $path);
+    $fileStr = end($unfold);
+    $originalUrl = $docPath . '/' . $fileStr;
+    $resizedUrl = $docPath . '/' . $size . ($crop ? '-cropped' : '') . '/' . $fileStr;
+    // pre-check for image, get default is it fails
+    $originalImageSize = @getimagesize($originalUrl);
+    if (empty($originalImageSize)) {
+      // not an image
+      $originalUrl = $docPath . '/' . $defaultImageNewName;
+      $resizedUrl = $docPath . '/' . $size . ($crop ? '-cropped' : '') . '/' . $defaultImageNewName;
+    }
     // finally, get that image with correct size
-    if (!file_exists($newUrl)) {
-      $newUrl = $commons->getImageVariant($oldUrl, $size, $crop);
+    if (!file_exists($resizedUrl)) {
+      dump($resizedUrl);
+      $resizedUrl = $commons->getImageVariant($originalUrl, $size, $crop);
+    } else {
+      $resizedUrl = '/' . $resizedUrl;
     }
 
-    return $newUrl;
+    return $resizedUrl;
   }
 
 

@@ -149,7 +149,6 @@ class TemplateExtension extends Twig_Extension {
     }
     // finally, get that image with correct size
     if (!file_exists($resizedUrl)) {
-      dump($resizedUrl);
       $resizedUrl = $commons->getImageVariant($originalUrl, $size, $crop);
     } else {
       $resizedUrl = '/' . $resizedUrl;

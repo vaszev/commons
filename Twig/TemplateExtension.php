@@ -32,7 +32,24 @@ class TemplateExtension extends Twig_Extension {
   public function getFunctions() {
     return array(
         new \Twig_SimpleFunction('lorem', array($this, 'loremIpsum')),
+        new \Twig_SimpleFunction('rnd', array($this, 'rndGen')),
     );
+  }
+
+
+
+  public function rndGen($start = 0, $end = 100, $float = false) {
+    $tmp = [];
+    $tmp[] = (integer)$start;
+    $tmp[] = (integer)$end;
+    sort($tmp, SORT_NUMERIC);
+    $rnd = rand($tmp[0], $tmp[1]);
+    if ($float) {
+      $d = rand(1, 99) / 100;
+      $rnd += $d;
+    }
+
+    return $rnd;
   }
 
 

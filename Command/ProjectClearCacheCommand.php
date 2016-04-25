@@ -24,7 +24,7 @@
 
     protected function execute(InputInterface $input, OutputInterface $output) {
       $container = $this->getContainer();
-      $cacheDir = $container->get('kernel')->getRootDir() . '/../app/cache';
+      $cacheDir = $container->get('kernel')->getRootDir() . '/../var/cache';
       try {
         $chk = @scandir($cacheDir);
         if (!$chk) {

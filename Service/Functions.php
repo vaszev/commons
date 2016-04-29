@@ -399,4 +399,13 @@ class Functions {
     return $coords;
   }
 
+
+
+  public function friendlyFilter($str) {
+    $str = $this->removeAccents($str);
+    $str = $this->replaceNonAlphanumericChars($str, "-");
+
+    return $str;
+  }
+
 }

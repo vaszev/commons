@@ -5,18 +5,18 @@ document:clear, project:clear:cache, project:size
 
 ##Collection of common functions
 
-genSimplePassword, getImageVariant, incFileNameIfExists, loremIpsum, passwordEncode, passwordVerify, refreshSecurityToken, removeAccents, repairFileName, replaceNonAlphanumericChars, addressToCoords, entityCheck
+genSimplePassword, getImageVariant, incFileNameIfExists, loremIpsum, passwordEncode, passwordVerify, refreshSecurityToken, removeAccents, repairFileName, replaceNonAlphanumericChars, addressToCoords, entityCheck, friendlyFilter
 
 ##Collection of common twig extensions
 
-dayNameFilter, friendlyFilter, imgSizeFilter, minutesTimeFilter, priceFilter, entityCheck, lorem, rnd
+dayNameFilter, friendlyFilter, imgSizeFilter, minutesTimeFilter, priceFilter, entityCheck, lorem, rnd, friendly
 
 ###how to **install**:
 https://packagist.org/packages/vaszev/commons-bundle
 
 via **composer**:
 ```
-$ composer install "vaszev/commons-bundle":"2.0.1"
+$ composer install "vaszev/commons-bundle":"2.0.2"
 ```
 
 set parameters in the **config.yml**:

@@ -102,8 +102,9 @@ class TemplateExtension extends Twig_Extension {
 
   public function friendlyFilter($str) {
     $commons = $this->container->get('vaszev_commons.functions');
+    $str = $commons->friendlyFilter($str);
 
-    return $commons->replaceNonAlphanumericChars($str);
+    return $str;
   }
 
 

@@ -402,9 +402,8 @@ class Functions {
 
 
   public function friendlyFilter($str) {
-
     $str = $this->removeAccents($str);
-    $str = $this->replaceNonAlphanumericChars($str, "-");
+    $str = $this->replaceNonAlphanumericChars($str, "-" );
 
     return $str;
   }

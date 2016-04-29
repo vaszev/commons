@@ -136,7 +136,7 @@ class TemplateExtension extends Twig_Extension {
 
 
 
-  public function imgSizeFilter($path, $size = 'small', $crop = false) {
+  public function imgSizeFilter($path, $size = 'small', $crop = false ) {
     $outer = strpos($path, 'http');
     if ($outer === false) {
       // not outer

@@ -342,7 +342,7 @@ class Functions {
               if ($data[0] < $arr[0] && $data[1] < $arr[1]) {
                 $gregwar->open($path)->save($newPath . "/" . $filename);
               } else {
-                $gregwar->open($path)->zoomCrop($arr[0], $arr[1], 'transparent', 'center', 'center')->save($newPath . "/" . $filename);
+                $gregwar->open($path)->zoomCrop($arr[0], $arr[1], 'transparent', 'center', 'top')->save($newPath . "/" . $filename);
               }
             }
 

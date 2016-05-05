@@ -351,8 +351,13 @@ class Functions {
             // let aspect ratio the same
             $newPath = $parentPath . "/" . $variation;
             @mkdir($newPath, "0755", true);
+            $data = getimagesize($path);
             if (!file_exists($newPath . "/" . $filename)) {
-              $gregwar->open($path)->scaleResize($arr[0], $arr[1], 'transparent')->save($newPath . "/" . $filename);
+              if ($data[0] < $arr[0] && $data[1] < $arr[1]) {
+                $gregwar->open($path)->save($newPath . "/" . $filename);
+              } else {
+                $gregwar->open($path)->scaleResize($arr[0], $arr[1], 'transparent')->save($newPath . "/" . $filename);
+              }
             }
 
             return ($relativePath . $variation . "/" . $filename);
@@ -403,7 +408,7 @@ class Functions {
 
   public function friendlyFilter($str) {
     $str = $this->removeAccents($str);
-    $str = $this->replaceNonAlphanumericChars($str, "_" );
+    $str = $this->replaceNonAlphanumericChars($str, "_");
 
     return $str;
   }

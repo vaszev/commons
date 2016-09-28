@@ -107,15 +107,23 @@ class Functions {
    * @param string $separator
    * @return string
    */
-  public function loremIpsum($words = 1, $onlyalpha = false, $html = false, $langs = array('default'), $separator = " ") {
+  public function loremIpsum($words = 1, $onlyalpha = false, $html = false, $langs = ['default'], $separator = " ") {
 
-    $sample = array();
+    $sample = [];
     $sample["default"] = "Ea vix ornatus offendit delicatissimi, perfecto similique in has. Summo consetetur at vis. Vix an nulla malorum sapientem, nostrud voluptatum cum ex, an usu civibus accusam salutatus. Ex magna voluptaria his, has latine convenire assentior in, vel insolens pertinacia ut. Id justo ullum meliore sit, cu tempor nemore ius.";
     $sample["cyrill"] = "Ыам ан ножтрюм дэфянятйоныс ентырпрытаряш, алиё трактатоз консэквюат жят ку, мэя коммодо жанктюч пытынтёюм ты. Льаборэ ножтрюд вэл ед, ад ийжквюы аэтырно нам. Шэа дёжкэрэ дэлььиката йн, коммодо ёнэрмйщ консэквюат эож ад, ыт ыюм фалля дикунт аккюжамюз. Эож экз омнеж мютат кэтэро, видишчы аликвюип аккюмзан но эжт. Эю вэл эзшэ аппэльлььантюр, алиё вёртюты пытынтёюм нам ты. Этёам доктюж дуо ку.";
     $sample["hebrew"] = "ומהימנה חרטומים אתנולוגיה שכל דת, הספרות והנדסה קלאסיים אחד ב. כלל מה לציין הבקשה לערכים, היום משופרות בדף בה. את שער מיותר איטליה, בדף אל מיזם המדינה שיתופית. הראשי למתחילים דת כדי, אל בקרבת צרפתית העברית אתה, מתוך חינוך מדריכים או בקר. ערכים ייִדיש אספרנטו ב עזה, של זכר קבלו למנוע, נפלו כלשהו אתה על. ליצירתה ויקימדיה וספציפיים ויש או, קרן למנוע בחירות משפטים או.";
 
-    $tags = array('h2', 'h3', 'h4', 'strong', 'span', 'underline', 'p', 'em', 'a');
-    $tmp = array();
+    $tags = ['h2' => 2, 'h3' => 3, 'h4' => 3, 'strong' => 5, 'span' => 20, 'underline' => 3, 'p' => 30, 'em' => 5, 'a' => 3];
+    $shuffledTags = [];
+    $keys = array_keys($tags);
+    shuffle($keys);
+    foreach ($keys as $key) {
+      $shuffledTags[$key] = $tags[$key];
+    }
+    $tags = $shuffledTags;
+    $tagWords = 0;
+    $tmp = [];
     foreach ($langs as $one_lang) {
       $txt = $sample[$one_lang];
       $arr = explode(" ", $txt);
@@ -127,14 +135,28 @@ class Functions {
         } else {
           $tmp[] = $first;
         }
-        if ($html) {
-          shuffle($tags);
-          $tag = $tags[0];
-          $tmp[] = '<' . ($tag == "a" ? 'a href="javascript:void(0);"' : $tag) . '>' . $first . '</' . $tag . '>';
-        }
       } // FOR
     }
     shuffle($tmp);
+    if ($html) {
+      $htmlTmp = [];
+      for ($w = 0; $w < count($tmp); $w++) {
+        if ($tagWords == 0) {
+          $next = (list($tag, $tagWords) = each($tags));
+          if (!$next) {
+            reset($tags);
+            list($tag, $tagWords) = each($tags);
+          }
+          $htmlTmp[] = '<' . ($tag == "a" ? 'a href="javascript:void(0);"' : $tag) . '>';
+        }
+        $htmlTmp[] = $tmp[$w];
+        $tagWords--;
+        if ($tagWords == 0) {
+          $htmlTmp[] = '</' . $tag . '>';
+        }
+      }
+      $tmp = $htmlTmp;
+    }
 
     return implode($separator, $tmp);
   }

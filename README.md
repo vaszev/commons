@@ -22,8 +22,9 @@ $ composer install "vaszev/commons-bundle":"~2.0"
 set parameters in the **config.yml**:
 ```yaml
 vaszev_commons:
-    default_image: '../Resources/public/img/tr.png'
+    default_image: '../Resources/public/img/tr.png'    
     docs: '/uploads/documents/'
+    image_quality: 70
     image_variations:
       small: [100,50]
       medium: [200,150]

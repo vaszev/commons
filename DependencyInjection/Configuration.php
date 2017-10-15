@@ -13,6 +13,7 @@ class Configuration implements ConfigurationInterface {
 
   private $defaultImage = null;
   private $docs = null;
+  private $imageQuality = 70;
   private $imageVariations = [];
 
 
@@ -26,9 +27,10 @@ class Configuration implements ConfigurationInterface {
 
     $rootNode
         ->children()
-          ->variableNode('default_image')->defaultValue($this->defaultImage)->end()
-          ->variableNode('docs')->defaultValue($this->docs)->end()
-          ->variableNode('image_variations')->defaultValue($this->imageVariations)->end()
+        ->variableNode('default_image')->defaultValue($this->defaultImage)->end()
+        ->variableNode('docs')->defaultValue($this->docs)->end()
+        ->variableNode('image_quality')->defaultValue($this->imageQuality)->end()
+        ->variableNode('image_variations')->defaultValue($this->imageVariations)->end()
         ->end();
 
     // Here you should define the parameters that are allowed to

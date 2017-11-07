@@ -1,7 +1,9 @@
 <?php
+
 namespace Vaszev\CommonsBundle\Twig;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Intl\Intl;
 use Twig_Extension;
 
 class TemplateExtension extends Twig_Extension {
@@ -17,23 +19,34 @@ class TemplateExtension extends Twig_Extension {
 
 
   public function getFilters() {
-    return array(
-        new \Twig_SimpleFilter('minutesTime', array($this, 'minutesTimeFilter')),
-        new \Twig_SimpleFilter('dayName', array($this, 'dayNameFilter')),
-        new \Twig_SimpleFilter('price', array($this, 'priceFilter')),
-        new \Twig_SimpleFilter('imgSize', array($this, 'imgSizeFilter')),
-        new \Twig_SimpleFilter('friendly', array($this, 'friendlyFilter')),
-        new \Twig_SimpleFilter('entityCheck', array($this, 'entityCheck')),
-    );
+    return [
+        new \Twig_SimpleFilter('minutesTime', [$this, 'minutesTimeFilter']),
+        new \Twig_SimpleFilter('dayName', [$this, 'dayNameFilter']),
+        new \Twig_SimpleFilter('price', [$this, 'priceFilter']),
+        new \Twig_SimpleFilter('imgSize', [$this, 'imgSizeFilter']),
+        new \Twig_SimpleFilter('imgSizeKept', [$this, 'imgSizeFilterKept']),
+        new \Twig_SimpleFilter('friendly', [$this, 'friendlyFilter']),
+        new \Twig_SimpleFilter('entityCheck', [$this, 'entityCheck']),
+        new \Twig_SimpleFilter('metricToImperial', [$this, 'metricToImperial']),
+        new \Twig_SimpleFilter('country', [$this, 'countryFilter']),
+        new \Twig_SimpleFilter('ordinal', [$this, 'ordinal']),
+        new \Twig_SimpleFilter('strPos', [$this, 'strPos']),
+        new \Twig_SimpleFilter('strReplace', [$this, 'strReplace']),
+        new \Twig_SimpleFilter('verifiedDefault', [$this, 'verifiedDefault']),
+        new \Twig_SimpleFilter('numberScale', [$this, 'numberScale']),
+        new \Twig_SimpleFilter('autoPunctuation', [$this, 'autoPunctuation']),
+        new \Twig_SimpleFilter('quotation', [$this, 'quotation'], ['is_safe' => ['html']]),
+        new \Twig_SimpleFilter('resolution', [$this, 'resolution']),
+    ];
   }
 
 
 
   public function getFunctions() {
-    return array(
-        new \Twig_SimpleFunction('lorem', array($this, 'loremIpsum')),
-        new \Twig_SimpleFunction('rnd', array($this, 'rndGen')),
-    );
+    return [
+        new \Twig_SimpleFunction('lorem', [$this, 'loremIpsum']),
+        new \Twig_SimpleFunction('rnd', [$this, 'rndGen']),
+    ];
   }
 
 
@@ -57,8 +70,8 @@ class TemplateExtension extends Twig_Extension {
   public function loremIpsum($words = 1, $onlyalpha = false, $html = false) {
     $sample = "Ea vix ornatus offendit delicatissimi, perfecto similique in has. Summo consetetur at vis. Vix an nulla malorum sapientem, nostrud voluptatum cum ex, an usu civibus accusam salutatus. Ex magna voluptaria his, has latine convenire assentior in, vel insolens pertinacia ut. Id justo ullum meliore sit, cu tempor nemore ius.";
 
-    $tags = array('h2', 'h3', 'h4', 'strong', 'span', 'underline', 'p', 'em', 'a');
-    $tmp = array();
+    $tags = ['h2', 'h3', 'h4', 'strong', 'span', 'underline', 'p', 'em', 'a'];
+    $tmp = [];
 
     $arr = explode(" ", $sample);
     for ($w = 0; $w < ($words); $w++) {
@@ -136,7 +149,7 @@ class TemplateExtension extends Twig_Extension {
 
 
 
-  public function imgSizeFilter($path, $size = 'small', $crop = false ) {
+  public function imgSizeFilter($path, $size = 'small', $crop = false) {
     $outer = strpos($path, 'http');
     if ($outer === false) {
       // not outer
@@ -177,7 +190,171 @@ class TemplateExtension extends Twig_Extension {
 
 
 
+  public function imgSizeFilterKept($path, $size = 'small') {
+    error_reporting(E_ERROR);
+    $outer = strpos($path, 'http');
+    if ($outer === false) {
+      // not outer
+    } else {
+      // outer link, start with http
+      return $path;
+    }
+    $rootDir = $this->container->get('kernel')->getRootDir();
+    $commons = $this->container->get('vaszev_commons.functions');
+    $docPath = trim($this->container->getParameter('vaszev_commons.docs'), '/');
+    $defaultImage = __DIR__ . '/' . $this->container->getParameter('vaszev_commons.default_image');
+    $defaultImageNewName = 'default-transparent.png';
+    $defaultImageDestination = $rootDir . '/../web/' . $docPath . '/' . $defaultImageNewName;
+    // copy default image if not exists
+    if (!file_exists($defaultImageDestination)) {
+      copy($defaultImage, $defaultImageDestination);
+    }
+    $unfold = explode('/', $path);
+    $fileStr = end($unfold);
+    $originalUrl = $docPath . '/' . $fileStr;
+    $resizedUrl = $docPath . '/' . $size . '-kept' . '/' . $fileStr;
+    // pre-check for image, get default is it fails
+    $originalImageSize = @getimagesize($originalUrl);
+    if (empty($originalImageSize)) {
+      // not an image
+      $originalUrl = $docPath . '/' . $defaultImageNewName;
+      $resizedUrl = $docPath . '/' . $size . '-kept' . '/' . $defaultImageNewName;
+    }
+    // finally, get that image with correct size
+    if (!file_exists($resizedUrl)) {
+      $resizedUrl = $commons->getImageVersion($originalUrl, $size);
+    } else {
+      $resizedUrl = '/' . $resizedUrl;
+    }
+
+    return $resizedUrl;
+  }
+
+
+
+  public function metricToImperial($cm = 0) {
+    $commons = $this->container->get('vaszev_commons.functions');
+
+    return $commons->metricToImperial($cm);
+  }
+
+
+
   public function getName() {
     return 'template_extension';
   }
+
+
+
+  public function countryFilter($countryCode) {
+    $c = Intl::getRegionBundle()->getCountryName($countryCode);
+
+    return ($c ? $c : $countryCode);
+  }
+
+
+
+  public function ordinal($number) {
+    $ends = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'];
+
+    if ((($number % 100) >= 11) && (($number % 100) <= 13)) {
+      return $number . 'th';
+    } else {
+      return $number . $ends[$number % 10];
+    }
+  }
+
+
+
+  public function strPos($string, $findMe) {
+    if (empty($string) || empty($findMe)) {
+      return null;
+    }
+
+    return stripos($string, $findMe);
+  }
+
+
+
+  public function strReplace($string, $findMe, $replace) {
+    $ret = str_ireplace($findMe, $replace, $string);
+
+    return $ret;
+  }
+
+
+
+  public function verifiedDefault($entity = null, $defaultValue = null) {
+    try {
+      if (empty($entity)) {
+        throw new \Exception("entity is empty");
+      }
+      if (!is_object($entity)) {
+        throw new \Exception("entity is not an object");
+      }
+      if (!empty($entity->getDeleted())) {
+        throw new \Exception("entity was deleted");
+      }
+      $value = $entity->__toString();
+
+      return $value;
+    } catch (\Exception $e) {
+      return $defaultValue;
+    }
+  }
+
+
+
+  public function numberScale($number, $decimal = 1) {
+    return $this->container->get('vaszev_commons.functions')->numberScale($number, $decimal);
+  }
+
+
+
+  public function autoPunctuation($string = null, $prefix = null, $postfix = null) {
+    if (empty($string)) {
+      return null;
+    }
+    $string = trim($string);
+    $end = substr($string, -1);
+    $chk = ctype_alnum($end);
+    $txt = $prefix . ($chk ? $string . '.' : $string) . $postfix;
+
+    return $txt;
+  }
+
+
+
+  public function quotation($string, $stripTags = true) {
+    $string = nl2br($string);
+    if ($stripTags) {
+      $string = strip_tags($string);
+    }
+    $string = html_entity_decode($string, ENT_QUOTES);
+    $string = str_replace("\n", ' ', $string);
+    $string = str_replace("\r", '', $string);
+    $string = str_replace('"', "'", $string);
+
+    return $string;
+  }
+
+
+
+  public function resolution($path, $type = 'width') {
+    try {
+      $info = @getimagesize($path);
+      if (empty($info)) {
+        throw new \Exception('invalid image');
+      }
+      if ($type == 'width') {
+        return $info[0];
+      } else {
+        return $info[1];
+      }
+    } catch (\Exception $e) {
+      return null;
+    }
+  }
+
 }
+

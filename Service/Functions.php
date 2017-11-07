@@ -8,6 +8,7 @@ use Gregwar\ImageBundle\GregwarImageBundle;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
+
 class Functions {
 
   private $doctrine;
@@ -396,6 +397,37 @@ class Functions {
 
 
 
+  public function getImageVersion($path = null, $size = null) {
+    if ($path) {
+      $gregwar = new Image();
+      $unfold = explode("/", $path);
+      $filename = array_pop($unfold);
+      $parentPath = implode("/", $unfold);
+      $relativePath = $this->container->getParameter('vaszev_commons.docs');
+      $variations = $this->container->getParameter('vaszev_commons.image_variations');
+      foreach ($variations as $variation => $arr) {
+        if ($variation == $size) {
+          // let aspect ratio the same
+          $newPath = $parentPath . "/" . $variation . "-kept";
+          @mkdir($newPath, "0755", true);
+          $data = getimagesize($path);
+          if (!file_exists($newPath . "/" . $filename)) {
+            if ($data[0] < $arr[0] && $data[1] < $arr[1]) {
+              $gregwar->open($path)->save($newPath . "/" . $filename, 'guess', $this->container->getParameter('vaszev_commons.image_quality'));
+            } else {
+              $gregwar->open($path)->cropResize($arr[0], $arr[1], 'transparent')->save($newPath . "/" . $filename, 'guess', $this->container->getParameter('vaszev_commons.image_quality'));
+            }
+          }
+
+          return ($relativePath . $variation . "-kept" . "/" . $filename);
+        }
+      }
+    }
+    throw new FileNotFoundException('Image not found');
+  }
+
+
+
   /**
    * converts address to geo-coords
    * @param array $address [0:city, 1:street & number, 2:zip & country]
@@ -439,4 +471,176 @@ class Functions {
     return $str;
   }
 
+
+
+  public function metricToImperial($cm = null) {
+    $ret = '';
+    if (empty($cm)) {
+      return $ret;
+    }
+    $meters = $cm / 100;
+    $feets = floor($meters * 3.2808);
+    $cm = $cm % (($feets * 0.3048) * 100);
+    $inches = round(!$cm ? 0 : $cm / 2.54);
+    if ($feets) {
+      $ret .= $feets . "'";
+    }
+    if ($inches) {
+      $ret .= $inches . '"';
+    }
+
+    return $ret;
+  }
+
+
+
+  public function numberScale($number, $decimal = 1, $minValue = null) {
+    $kilo = 1000;
+    $mega = $kilo * 1000;
+    $giga = $mega * 1000;
+    if (!empty($minValue) && $minValue > $number) {
+      $number = $minValue;
+    }
+    if ($number >= $giga) {
+      $ret = round(($number / $giga), $decimal) . 'G';
+    } elseif ($number >= $mega) {
+      $ret = round(($number / $mega), $decimal) . 'M';
+    } elseif ($number >= $kilo) {
+      $ret = round(($number / $kilo), $decimal) . 'K';
+    } else {
+      $ret = $number;
+    }
+
+    return $ret;
+  }
+
+
+
+  public function truncateAtWords($str, $maxLength = 100, $sign = '...') {
+    $delimiter = ' ';
+    $exploded = explode($delimiter, $str);
+    $ret = null;
+    try {
+      $sum = 0;
+      $tmp = [];
+      foreach ($exploded as $word) {
+        $tmp[] = $word;
+        $sum += strlen($word) + 1;
+        if ($sum >= $maxLength) {
+          throw new \Exception('limit reached');
+        }
+      }
+      $ret = implode($delimiter, $tmp);
+    } catch (\Exception $e) {
+      $ret = implode($delimiter, $tmp) . $sign;
+    }
+
+    return $ret;
+  }
+
+
+
+  public function truncate($str, $max = 25) {
+    if (strlen($str) <= $max) {
+      return $str;
+    }
+    $str = mb_substr($str, 0, $max) . "...";
+
+    return $str;
+  }
+
+
+
+  public function getFavicon($url = null) {
+    $favicon = null;
+    $elems = parse_url($url);
+    $url = $elems['scheme'] . '://' . $elems['host'];
+    $output = @file_get_contents($url);
+    $regex_pattern = "/rel=\"shortcut icon\" (?:href=[\'\"]([^\'\"]+)[\'\"])?/";
+    preg_match_all($regex_pattern, $output, $matches);
+    if (isset($matches[1][0])) {
+      $favicon = $matches[1][0];
+      $favicon_elems = parse_url($favicon);
+      if (!isset($favicon_elems['host'])) {
+        $favicon = $url . '/' . $favicon;
+      }
+    }
+
+    return $favicon;
+  }
+
+
+
+  public function urlResponse($url = null) {
+    $exceptions = ['soundcloud.com'];
+    foreach ($exceptions as $exception) {
+      $pos = strpos($url, $exception);
+      if ($pos !== false) {
+        return true;
+      }
+    }
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_exec($ch);
+    if (!curl_errno($ch)) {
+      $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+      if ($code >= 200 and $code < 400) {
+        return true;
+      }
+    }
+    curl_close($ch);
+
+    return false;
+  }
+
+
+
+  static function getClientIp() {
+    if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+      $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+      $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } elseif (isset($_SERVER['HTTP_X_FORWARDED'])) {
+      $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+    } elseif (isset($_SERVER['HTTP_FORWARDED_FOR'])) {
+      $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+    } elseif (isset($_SERVER['HTTP_FORWARDED'])) {
+      $ipaddress = $_SERVER['HTTP_FORWARDED'];
+    } elseif (isset($_SERVER['REMOTE_ADDR'])) {
+      $ipaddress = $_SERVER['REMOTE_ADDR'];
+    } else {
+      $ipaddress = null;
+    }
+
+    $ipaddress = str_replace('for=', '', $ipaddress);
+
+    return $ipaddress;
+  }
+
+
+
+  /**
+   * @param $path * must be absolute path
+   * @param $filename
+   * @return bool|string
+   */
+  public function filenameCheck($path, $filename) {
+    if (empty($filename)) {
+      return false;
+    }
+    if (substr($path, -1) == '/') {
+      $path = substr($path, 0, -1);
+    }
+    $tmp = $filename;
+    $count = 1;
+    while (file_exists($path . '/' . $tmp)) {
+      $unfold = explode(".", $filename);
+      $ext = array_pop($unfold);
+      $tmp = implode('.', $unfold) . "(" . ($count++) . ")." . $ext;
+    }
+
+    return $path . '/' . $tmp;
+  }
 }

@@ -468,8 +468,12 @@ class Functions {
     $str = $this->removeAccents($str);
     $str = $this->replaceNonAlphanumericChars($str, "_");
 
-    $transliterator = \Transliterator::create('Any-Latin');
-    $translated = $transliterator->transliterate($str);
+    try {
+      $transliterator = \Transliterator::create('Any-Latin');
+      $translated = $transliterator->transliterate($str);
+    } catch (\Exception $e) {
+      $translated = $str;
+    }
 
     return $translated;
   }

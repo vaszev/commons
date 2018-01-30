@@ -467,11 +467,10 @@ class Functions {
   public function friendlyFilter($str) {
     $str = $this->removeAccents($str);
     $str = $this->replaceNonAlphanumericChars($str, "_");
-
-    try {
+    if (class_exists('Transliterator')) {
       $transliterator = \Transliterator::create('Any-Latin');
       $translated = $transliterator->transliterate($str);
-    } catch (\Exception $e) {
+    } else {
       $translated = $str;
     }
 

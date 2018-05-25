@@ -466,10 +466,11 @@ class Functions {
 
   public function friendlyFilter($str) {
     $str = $this->removeAccents($str);
-    $str = $this->replaceNonAlphanumericChars($str, "_");
+    $str = $this->replaceNonAlphanumericChars($str, "_", ['-' => '_']);
     if (class_exists('Transliterator')) {
       $transliterator = \Transliterator::create('Any-Latin');
       $translated = $transliterator->transliterate($str);
+      $translated = str_replace('-', '_', $translated); // Korean-Latin conversation sometimes uses "-"
     } else {
       $translated = $str;
     }

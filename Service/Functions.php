@@ -468,7 +468,7 @@ class Functions {
     $str = $this->removeAccents($str);
     $str = $this->replaceNonAlphanumericChars($str, "-");
     if (class_exists('Transliterator')) {
-      $transliterator = \Transliterator::create('Any-Latin');
+      $transliterator = \Transliterator::create('Any-Latin;Latin-ASCII;');
       $translated = $transliterator->transliterate($str);
     } else {
       $translated = $str;

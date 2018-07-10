@@ -465,16 +465,14 @@ class Functions {
 
 
   public function friendlyFilter($str) {
+    if (class_exists('Transliterator')) {
+      $transliterator = \Transliterator::create('Accents-Any;Any-Latin;Latin-ASCII');
+      $str = $transliterator->transliterate($str);
+    }
     $str = $this->removeAccents($str);
     $str = $this->replaceNonAlphanumericChars($str, "-");
-    if (class_exists('Transliterator')) {
-      $transliterator = \Transliterator::create('Any-Latin;Latin-ASCII;');
-      $translated = $transliterator->transliterate($str);
-    } else {
-      $translated = $str;
-    }
 
-    return $translated;
+    return $str;
   }
 
 

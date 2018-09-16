@@ -5,6 +5,7 @@ namespace Vaszev\CommonsBundle\Service;
 use Gregwar\Image\Image;
 use Gregwar\ImageBundle\DependencyInjection\GregwarImageExtension;
 use Gregwar\ImageBundle\GregwarImageBundle;
+use ImageOptimizer\OptimizerFactory;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -350,6 +351,26 @@ class Functions {
 
 
 
+  public function pngCompression($file = null, $quality = 70, $speed = 1) {
+    try {
+      $factory = new OptimizerFactory([
+          'ignore_errors'    => true,
+          'pngquant_options' => [
+              '--force', '--speed=' . $speed, '--quality=' . $quality,
+          ],
+      ]);
+      $optimizer = $factory->get('pngquant');
+      $optimizer->optimize($file);
+    } catch (\Exception $exception) {
+      // error
+      return false;
+    }
+
+    return true;
+  }
+
+
+
   public function getImageVariant($path = null, $size = null, $crop = false) {
     if ($path) {
       $gregwar = new Image();
@@ -369,8 +390,11 @@ class Functions {
               if ($data[0] < $arr[0] && $data[1] < $arr[1]) {
                 $gregwar->open($path)->save($newPath . "/" . $filename, 'guess', $this->container->getParameter('vaszev_commons.image_quality'));
               } else {
-                $gregwar->open($path)->zoomCrop($arr[0], $arr[1], 'transparent', 'center', 'top')->save($newPath . "/" . $filename, 'guess', $this->container->getParameter('vaszev_commons.image_quality'));
+                $gregwar->open($path)
+                        ->zoomCrop($arr[0], $arr[1], 'transparent', 'center', 'top')
+                        ->save($newPath . "/" . $filename, 'guess', $this->container->getParameter('vaszev_commons.image_quality'));
               }
+              $this->pngCompression($newPath . "/" . $filename);
             }
 
             return ($relativePath . $variation . "-cropped" . "/" . $filename);
@@ -383,8 +407,11 @@ class Functions {
               if ($data[0] < $arr[0] && $data[1] < $arr[1]) {
                 $gregwar->open($path)->save($newPath . "/" . $filename, 'guess', $this->container->getParameter('vaszev_commons.image_quality'));
               } else {
-                $gregwar->open($path)->scaleResize($arr[0], $arr[1], 'transparent')->save($newPath . "/" . $filename, 'guess', $this->container->getParameter('vaszev_commons.image_quality'));
+                $gregwar->open($path)
+                        ->scaleResize($arr[0], $arr[1], 'transparent')
+                        ->save($newPath . "/" . $filename, 'guess', $this->container->getParameter('vaszev_commons.image_quality'));
               }
+              $this->pngCompression($newPath . "/" . $filename);
             }
 
             return ($relativePath . $variation . "/" . $filename);
@@ -417,6 +444,7 @@ class Functions {
             } else {
               $gregwar->open($path)->cropResize($arr[0], $arr[1], 'transparent')->save($newPath . "/" . $filename, 'guess', $this->container->getParameter('vaszev_commons.image_quality'));
             }
+            $this->pngCompression($newPath . "/" . $filename);
           }
 
           return ($relativePath . $variation . "-kept" . "/" . $filename);

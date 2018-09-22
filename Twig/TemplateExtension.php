@@ -20,6 +20,8 @@ class TemplateExtension extends Twig_Extension {
 
   public function getFilters() {
     return [
+        new \Twig_SimpleFilter('joinByKey', [$this, 'joinByKey']),
+        new \Twig_SimpleFilter('secret', [$this, 'secret']),
         new \Twig_SimpleFilter('minutesTime', [$this, 'minutesTimeFilter']),
         new \Twig_SimpleFilter('dayName', [$this, 'dayNameFilter']),
         new \Twig_SimpleFilter('price', [$this, 'priceFilter']),
@@ -32,11 +34,13 @@ class TemplateExtension extends Twig_Extension {
         new \Twig_SimpleFilter('ordinal', [$this, 'ordinal']),
         new \Twig_SimpleFilter('strPos', [$this, 'strPos']),
         new \Twig_SimpleFilter('strReplace', [$this, 'strReplace']),
+        new \Twig_SimpleFilter('strPad', [$this, 'strPad']),
         new \Twig_SimpleFilter('verifiedDefault', [$this, 'verifiedDefault']),
         new \Twig_SimpleFilter('numberScale', [$this, 'numberScale']),
         new \Twig_SimpleFilter('autoPunctuation', [$this, 'autoPunctuation']),
         new \Twig_SimpleFilter('quotation', [$this, 'quotation'], ['is_safe' => ['html']]),
         new \Twig_SimpleFilter('resolution', [$this, 'resolution']),
+        new \Twig_SimpleFilter('br2nl', [$this, 'br2nl']),
     ];
   }
 
@@ -228,6 +232,7 @@ class TemplateExtension extends Twig_Extension {
     }
 
     return $resizedUrl;
+
   }
 
 
@@ -326,6 +331,7 @@ class TemplateExtension extends Twig_Extension {
 
 
   public function quotation($string, $stripTags = true) {
+    $string = html_entity_decode($string);
     $string = nl2br($string);
     if ($stripTags) {
       $string = strip_tags($string);
@@ -354,6 +360,49 @@ class TemplateExtension extends Twig_Extension {
     } catch (\Exception $e) {
       return null;
     }
+  }
+
+
+
+  public function secret($str) {
+    $str = str_rot13($str);
+    $str = str_shuffle($str);
+
+    return $str;
+  }
+
+
+
+  public function strPad($str, $padLength, $padString, $orient = STR_PAD_LEFT) {
+    return str_pad($str, $padLength, $padString, $orient);
+  }
+
+
+
+  public function br2nl($str) {
+    $breaks = ["<br />", "<br>", "<br/>"];
+    $str = str_ireplace($breaks, "\r\n", $str);
+
+    return $str;
+  }
+
+
+
+  public function joinByKey($arr, $glue = ',', $index = null) {
+    if (!is_array($arr) || empty($index)) {
+      return $arr;
+    }
+    $tmp = [];
+    foreach ($arr as $item) {
+      foreach ($item as $key => $val) {
+        if ($key == $index) {
+          $tmp[] = $val;
+        }
+      }
+    }
+    $ret = implode($glue, $tmp);
+
+    return $ret;
   }
 
 }

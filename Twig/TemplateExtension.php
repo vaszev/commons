@@ -117,9 +117,10 @@ class TemplateExtension extends Twig_Extension {
 
 
 
-  public function friendlyFilter($str) {
+  public function friendlyFilter($str, $default = 'untitled') {
     $commons = $this->container->get('vaszev_commons.functions');
-    $str = $commons->friendlyFilter($str);
+    $str = trim($commons->friendlyFilter($str));
+    $str = ($str ? $str : $default);
 
     return $str;
   }

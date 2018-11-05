@@ -506,19 +506,30 @@ class Functions {
 
 
   public function metricToImperial($cm = null) {
-    $ret = '';
-    if (empty($cm)) {
-      return $ret;
-    }
-    $meters = $cm / 100;
-    $feets = floor($meters * 3.2808);
-    $cm = $cm % (($feets * 0.3048) * 100);
-    $inches = round(!$cm ? 0 : $cm / 2.54);
-    if ($feets) {
-      $ret .= $feets . "'";
-    }
-    if ($inches) {
-      $ret .= $inches . '"';
+    $ret = null;
+    try {
+      if (empty($cm)) {
+        throw new \Exception('empty value');
+      }
+      $meters = $cm / 100;
+      $feets = floor($meters * 3.2808);
+      if (!$feets) {
+        throw new \Exception('feet value became zero');
+      }
+      $cm = $cm % (($feets * 0.3048) * 100);
+      if (!$cm) {
+        throw new \Exception('cm value became zero');
+      }
+      $inches = round(!$cm ? 0 : $cm / 2.54);
+      if ($feets) {
+        $ret .= $feets . "'";
+      }
+      if ($inches) {
+        $ret .= $inches . '"';
+      }
+    } catch (\Exception $e) {
+      // error
+      $ret = null;
     }
 
     return $ret;

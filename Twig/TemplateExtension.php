@@ -165,7 +165,8 @@ class TemplateExtension extends Twig_Extension {
     $rootDir = $this->container->get('kernel')->getRootDir();
     $commons = $this->container->get('vaszev_commons.functions');
     $docPath = trim($this->container->getParameter('vaszev_commons.docs'), '/');
-    $defaultImage = __DIR__ . '/' . $this->container->getParameter('vaszev_commons.default_image');
+    // $defaultImage = __DIR__ . '/' . $this->container->getParameter('vaszev_commons.default_image');
+    $defaultImage = $this->container->getParameter('vaszev_commons.default_image');
     $defaultImageNewName = 'default-transparent.png';
     $defaultImageDestination = $rootDir . '/../web/' . $docPath . '/' . $defaultImageNewName;
     // copy default image if not exists
@@ -207,7 +208,8 @@ class TemplateExtension extends Twig_Extension {
     $rootDir = $this->container->get('kernel')->getRootDir();
     $commons = $this->container->get('vaszev_commons.functions');
     $docPath = trim($this->container->getParameter('vaszev_commons.docs'), '/');
-    $defaultImage = __DIR__ . '/' . $this->container->getParameter('vaszev_commons.default_image');
+    // $defaultImage = __DIR__ . '/' . $this->container->getParameter('vaszev_commons.default_image');
+    $defaultImage = $this->container->getParameter('vaszev_commons.default_image');
     $defaultImageNewName = 'default-transparent.png';
     $defaultImageDestination = $rootDir . '/../web/' . $docPath . '/' . $defaultImageNewName;
     // copy default image if not exists

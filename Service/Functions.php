@@ -545,11 +545,11 @@ class Functions {
       $number = $minValue;
     }
     if ($number >= $giga) {
-      $ret = round(($number / $giga), $decimal) . 'G';
+      $ret = round(($number / $giga), $decimal) . 'B';  // billion
     } elseif ($number >= $mega) {
-      $ret = round(($number / $mega), $decimal) . 'M';
+      $ret = round(($number / $mega), $decimal) . 'M';  // million
     } elseif ($number >= $kilo) {
-      $ret = round(($number / $kilo), $decimal) . 'K';
+      $ret = round(($number / $kilo), $decimal) . 'K';  // kilo
     } else {
       $ret = $number;
     }

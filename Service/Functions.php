@@ -492,13 +492,13 @@ class Functions {
 
 
 
-  public function friendlyFilter($str) {
+  public function friendlyFilter($str, $joker = "-") {
     if (class_exists('Transliterator')) {
       $transliterator = \Transliterator::create('Accents-Any;Any-Latin;Latin-ASCII');
       $str = $transliterator->transliterate($str);
     }
     $str = $this->removeAccents($str);
-    $str = $this->replaceNonAlphanumericChars($str, "-");
+    $str = $this->replaceNonAlphanumericChars($str, $joker);
 
     return $str;
   }

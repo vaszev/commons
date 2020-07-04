@@ -374,10 +374,10 @@ class Functions {
   public function getImageVariant($path = null, $size = null, $crop = false) {
     if ($path) {
       $gregwar = new Image();
-      $unfold = explode("/", $path);
-      $filename = array_pop($unfold);
-      $parentPath = implode("/", $unfold);
-      $relativePath = $this->container->getParameter('vaszev_commons.docs');
+      $pathParts = explode("/", $path);
+      $filename = array_pop($pathParts);
+      $parentPath = implode("/", $pathParts);
+      // $relativePath = $this->container->getParameter('vaszev_commons.docs');
       $variations = $this->container->getParameter('vaszev_commons.image_variations');
       foreach ($variations as $variation => $arr) {
         if ($variation == $size) {
@@ -397,7 +397,7 @@ class Functions {
               $this->pngCompression($newPath . "/" . $filename);
             }
 
-            return ($relativePath . $variation . "-cropped" . "/" . $filename);
+            return ('/' . $parentPath . '/' . $variation . "-cropped" . "/" . $filename);
           } else {
             // let aspect ratio the same
             $newPath = $parentPath . "/" . $variation;
@@ -414,7 +414,7 @@ class Functions {
               $this->pngCompression($newPath . "/" . $filename);
             }
 
-            return ($relativePath . $variation . "/" . $filename);
+            return ('/' . $parentPath . '/' . $variation . "/" . $filename);
           }
         }
       }
@@ -427,10 +427,10 @@ class Functions {
   public function getImageVersion($path = null, $size = null) {
     if ($path) {
       $gregwar = new Image();
-      $unfold = explode("/", $path);
-      $filename = array_pop($unfold);
-      $parentPath = implode("/", $unfold);
-      $relativePath = $this->container->getParameter('vaszev_commons.docs');
+      $pathParts = explode("/", $path);
+      $filename = array_pop($pathParts);
+      $parentPath = implode("/", $pathParts);
+      // $relativePath = $this->container->getParameter('vaszev_commons.docs');
       $variations = $this->container->getParameter('vaszev_commons.image_variations');
       foreach ($variations as $variation => $arr) {
         if ($variation == $size) {
@@ -447,7 +447,7 @@ class Functions {
             $this->pngCompression($newPath . "/" . $filename);
           }
 
-          return ($relativePath . $variation . "-kept" . "/" . $filename);
+          return ('/' . $parentPath . '/' . $variation . "-kept" . "/" . $filename);
         }
       }
     }

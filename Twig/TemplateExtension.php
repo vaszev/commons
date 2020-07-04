@@ -173,10 +173,10 @@ class TemplateExtension extends Twig_Extension {
     if (!file_exists($defaultImageDestination)) {
       copy($defaultImage, $defaultImageDestination);
     }
-    $unfold = explode('/', $path);
-    $fileStr = end($unfold);
-    $originalUrl = $docPath . '/' . $fileStr;
-    $resizedUrl = $docPath . '/' . $size . ($crop ? '-cropped' : '') . '/' . $fileStr;
+    $pathParts = explode('/', $path);
+    $fileStr = array_pop($pathParts);
+    $originalUrl = implode('/', $pathParts) . '/' . $fileStr;
+    $resizedUrl = implode('/', $pathParts) . '/' . $size . ($crop ? '-cropped' : '') . '/' . $fileStr;
     // pre-check for image, get default is it fails
     $originalImageSize = @getimagesize($originalUrl);
     if (empty($originalImageSize)) {
@@ -216,10 +216,10 @@ class TemplateExtension extends Twig_Extension {
     if (!file_exists($defaultImageDestination)) {
       copy($defaultImage, $defaultImageDestination);
     }
-    $unfold = explode('/', $path);
-    $fileStr = end($unfold);
-    $originalUrl = $docPath . '/' . $fileStr;
-    $resizedUrl = $docPath . '/' . $size . '-kept' . '/' . $fileStr;
+    $pathParts = explode('/', $path);
+    $fileStr = end($pathParts);
+    $originalUrl = implode('/', $pathParts) . '/' . $fileStr;
+    $resizedUrl = implode('/', $pathParts) . '/' . $size . '-kept' . '/' . $fileStr;
     // pre-check for image, get default is it fails
     $originalImageSize = @getimagesize($originalUrl);
     if (empty($originalImageSize)) {

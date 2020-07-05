@@ -494,7 +494,7 @@ class Functions {
 
   public function friendlyFilter($str, $joker = "-") {
     if (class_exists('Transliterator')) {
-      $transliterator = \Transliterator::create('Accents-Any;Any-Latin;Latin-ASCII');
+      $transliterator = \Transliterator::create('Accents-Any;Any-Latin;Latin-ASCII;Any-Accents;');
       $str = $transliterator->transliterate($str);
     }
     $str = $this->removeAccents($str);

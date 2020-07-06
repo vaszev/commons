@@ -217,7 +217,7 @@ class TemplateExtension extends Twig_Extension {
       copy($defaultImage, $defaultImageDestination);
     }
     $pathParts = explode('/', $path);
-    $fileStr = end($pathParts);
+    $fileStr = array_pop($pathParts);
     $originalUrl = implode('/', $pathParts) . '/' . $fileStr;
     $resizedUrl = implode('/', $pathParts) . '/' . $size . '-kept' . '/' . $fileStr;
     // pre-check for image, get default is it fails

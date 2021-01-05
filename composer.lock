@@ -51,17 +51,17 @@
         },
         {
             "name": "gregwar/image",
-            "version": "v2.0.22",
+            "version": "v2.0.28",
             "target-dir": "Gregwar/Image",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Gregwar/Image.git",
-                "reference": "c506d57d7fb5e67961d4eea6540ae8e23dffd406"
+                "reference": "68b4eddc45dacb3532e0fa16e5cb7d3937424a0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Gregwar/Image/zipball/c506d57d7fb5e67961d4eea6540ae8e23dffd406",
-                "reference": "c506d57d7fb5e67961d4eea6540ae8e23dffd406",
+                "url": "https://api.github.com/repos/Gregwar/Image/zipball/68b4eddc45dacb3532e0fa16e5cb7d3937424a0c",
+                "reference": "68b4eddc45dacb3532e0fa16e5cb7d3937424a0c",
                 "shasum": ""
             },
             "require": {
@@ -99,7 +99,7 @@
                 "gd",
                 "image"
             ],
-            "time": "2018-01-31T17:40:17+00:00"
+            "time": "2020-03-31T17:33:39+00:00"
         },
         {
             "name": "ps/image-optimizer",
@@ -1462,5 +1462,6 @@
         "php": ">=5.4.0",
         "ext-gd": "*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
